@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: mysql
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=cloudia_challenge
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=mysql
+  db-test:
+    container_name: mysql_test
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=cloudia_challenge_test
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=mysql
+  web:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: development
+    command: python autoapp.py
+    volumes:
+      - .:/app
+    ports:
+      - "8000:5000"
+    env_file:
+      - ./.env
+    environment:
+      - TEST_DATABASE_URL=mysql://mysql:mysql@db-test:3306/cloudia_challenge_test
+      - DATABASE_URL=mysql://mysql:mysql@db:3306/cloudia_challenge
+      - DEBUG=true
+      - FLASK_RUN_HOST=0.0.0.0
+    depends_on:
+      - db
+      - db-test
+
+volumes:
+  mysql_data:
