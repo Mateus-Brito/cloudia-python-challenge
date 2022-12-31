@@ -31,11 +31,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_USER: mysql
           MYSQL_PASSWORD: mysql
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         ports:
           - 3306:3306
     steps:
