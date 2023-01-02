@@ -43,9 +43,6 @@ jobs:
       uses: styfle/cancel-workflow-action@0.9.1
       with:
         access_token: ${{ github.token }}
-    - name: libmysql
-      run: |
-        sudo apt-get update && sudo apt-get install default-libmysqlclient-dev
     - uses: actions/checkout@v2
     - name: Verify Mysql connection
       env:
@@ -68,4 +65,5 @@ jobs:
         SECRET_KEY: ${{ env.FLASK_SECRET_KEY }}
         TEST_DATABASE_URL: mysql://mysql:mysql@localhost:3306/cloudia_challenge_test
       run: |
+        sudo /etc/init.d/mysql start
         flask test
