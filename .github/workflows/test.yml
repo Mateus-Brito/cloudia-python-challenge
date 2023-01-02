@@ -45,7 +45,7 @@ jobs:
         access_token: ${{ github.token }}
     - name: libmysql
       run: |
-        sudo apt-get update && sudo apt-get install libmysqlclient-dev
+        sudo apt-get update && sudo apt-get install default-libmysqlclient-dev
     - uses: actions/checkout@v2
     - name: Verify Mysql connection
       env:
