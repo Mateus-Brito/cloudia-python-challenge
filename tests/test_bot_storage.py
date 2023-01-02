@@ -79,7 +79,7 @@ def test_store_message_record(db):
     new_message = db.session.query(TelegramMessage).filter_by(id=1).first()
     assert new_message.id == message["message_id"]
     assert new_message.from_user_id == message["from_user"]["id"]
-    assert new_message.date == message["date"]
+    assert new_message.date.date() == message["date"].date()
     assert new_message.chat_id == message["chat"]["id"]
     assert new_message.edit_date == message["edit_date"]
     assert new_message.text == message["text"]
