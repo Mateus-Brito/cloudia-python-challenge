@@ -35,7 +35,7 @@ jobs:
           --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=10
         ports:
           - 3306:3306
     steps:
@@ -43,14 +43,6 @@ jobs:
       uses: styfle/cancel-workflow-action@0.9.1
       with:
         access_token: ${{ github.token }}
-    - uses: actions/checkout@v2
-    - name: Verify Mysql connection
-      env:
-        PORT: 3306
-      run: |
-        while ! mysqladmin ping -h"127.0.0.1" -P 3306 --silent; do
-          sleep 1
-        done 
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -60,6 +52,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements/dev.txt
+    - name: Sleep for 30 seconds
+      run: sleep 30s
+      shell: bash
     - name: Run Tests
       env:
         SECRET_KEY: ${{ env.FLASK_SECRET_KEY }}
