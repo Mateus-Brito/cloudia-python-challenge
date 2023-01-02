@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-import logging
-
 import sentry_sdk
+import telegram
 from flask import Flask, jsonify
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from cloudia_challenge import commands, telegram
-from cloudia_challenge.extensions import db, ma, migrate
+from cloudia_challenge import commands
+from cloudia_challenge import telegram as telegram_module
+from cloudia_challenge.extensions import db, migrate
+from cloudia_challenge.telegram.mock import create_send_message_mock
 
 
 def create_app(config_object="cloudia_challenge.settings"):
@@ -16,18 +17,32 @@ def create_app(config_object="cloudia_challenge.settings"):
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__.split(".")[0])
-    app.config.from_object(config_object)
-    configure_app(app)
+    configure_app(app, config_object)
+    configure_bot(app)
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
     register_shellcontext(app)
     register_commands(app)
-    configure_logger(app)
     return app
 
 
-def configure_app(app):
+def configure_bot(app):
+    """Register Telegram Bot instance."""
+    if app.config["TESTING"]:
+        from unittest.mock import Mock
+
+        bot = Mock()
+        bot.send_message = create_send_message_mock()
+    else:
+        bot = telegram.Bot(token=app.config["BOT_TOKEN"])
+    app.bot = bot
+    return app
+
+
+def configure_app(app, config_object):
+    """Register default app configuration"""
+    app.config.from_object(config_object)
     app.url_map.strict_slashes = False
     return app
 
@@ -35,14 +50,13 @@ def configure_app(app):
 def register_extensions(app):
     """Register Flask extensions."""
     db.init_app(app)
-    ma.init_app(app)
     migrate.init_app(app, db)
     return None
 
 
 def register_blueprints(app):
     """Register Flask blueprints."""
-    app.register_blueprint(telegram.views.blueprint)
+    app.register_blueprint(telegram_module.views.blueprint)
     return None
 
 
@@ -79,17 +93,3 @@ def register_shellcontext(app):
 def register_commands(app):
     """Register Click commands."""
     app.cli.add_command(commands.test)
-    app.cli.add_command(commands.lint)
-
-
-def configure_logger(app):
-    """Configure loggers."""
-    if not app.config["FLASK_DEBUG"]:
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
-        app.logger.addHandler(console_handler)
-
-        if app.config["SAVE_LOG_FILE"]:
-            file_handler = logging.FileHandler("access.log")
-            file_handler.setLevel(logging.DEBUG)
-            app.logger.addHandler(file_handler)

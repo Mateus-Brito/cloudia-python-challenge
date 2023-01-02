@@ -6,22 +6,24 @@ from .models import TelegramChat, TelegramMessage, TelegramUser
 
 
 def create_telegram_user_record(sender: User):
-    TelegramUser.create_or_update_by_id(
+    telegram_user = TelegramUser.create_or_update_by_id(
         id=sender.id,
         is_bot=sender.is_bot,
         first_name=sender.first_name,
         last_name=sender.last_name,
         username=sender.username,
     )
+    return telegram_user
 
 
 def create_telegram_chat_record(chat: Chat):
-    TelegramChat.create_or_update_by_id(
+    telegram_chat = TelegramChat.create_or_update_by_id(
         id=chat.id,
         type=chat.type,
         title=chat.title,
         username=chat.username,
     )
+    return telegram_chat
 
 
 def create_telegram_message_record(message: Message):

@@ -2,7 +2,7 @@ from cloudia_challenge.telegram.views import process_input
 
 
 def test_process_input_too_long():
-    # Test input with more than 280 characters
+    """Test input with more than 280 characters."""
     text_input = "9" * 281
     expected_output = "A entrada é muito longa. Por favor, insira até 280 caracteres."
 
@@ -10,7 +10,7 @@ def test_process_input_too_long():
 
 
 def test_process_input_non_integer():
-    # Test input that is not an integer
+    """Test input that is not an integer."""
     text_input = "abc"
     expected_output = "Por favor, insira um número inteiro."
 
@@ -18,7 +18,7 @@ def test_process_input_non_integer():
 
 
 def test_process_input_fizzbuzz():
-    # Tests input that is divisible by 3 and 5
+    """Tests input that is divisible by 3 and 5."""
     text_input = "15"
     expected_output = "FizzBuzz"
 
@@ -26,7 +26,7 @@ def test_process_input_fizzbuzz():
 
 
 def test_process_input_fizz():
-    # Tests input that is divisible by 3 but not by 5
+    """Tests input that is divisible by 3 but not by 5."""
     text_input = "3"
     expected_output = "Fizz"
 
@@ -34,7 +34,7 @@ def test_process_input_fizz():
 
 
 def test_process_input_buzz():
-    # Tests input that is divisible by 5 but not by 3
+    """Tests input that is divisible by 5 but not by 3."""
     text_input = "5"
     expected_output = "Buzz"
 
@@ -42,7 +42,7 @@ def test_process_input_buzz():
 
 
 def test_process_input_integer():
-    # Tests input that is an integer but not divisible by 3 or 5
+    """Tests input that is an integer but not divisible by 3 or 5."""
     text_input = "7"
     expected_output = 7
 

@@ -1,7 +1,6 @@
-from flask import Blueprint, request
+from flask import Blueprint, current_app, request
 from telegram import Update
 
-from .bot import bot
 from .services import save_telegram_records
 
 blueprint = Blueprint("telegram", __name__, url_prefix="/api/telegram")
@@ -29,13 +28,15 @@ def process_input(text_input: str):
 
 @blueprint.route("/update", methods=["POST"])
 def webhook_handler():
-    update = Update.de_json(request.get_json(force=True), bot)
+    update = Update.de_json(request.get_json(force=True), current_app.bot)
 
     input_message = update.message
     save_telegram_records(input_message)
 
     text_output = process_input(update.message.text)
-    output_message = bot.send_message(chat_id=update.message.chat_id, text=text_output)
+    output_message = current_app.bot.send_message(
+        chat_id=update.message.chat_id, text=text_output
+    )
 
     save_telegram_records(output_message)
     return "ok"

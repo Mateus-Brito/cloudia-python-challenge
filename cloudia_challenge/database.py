@@ -38,7 +38,7 @@ class CRUDMixin(object):
         db.session.delete(self)
         if commit:
             return db.session.commit()
-        return
+        return None
 
 
 class Model(CRUDMixin, db.Model):
