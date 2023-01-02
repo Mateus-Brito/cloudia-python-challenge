@@ -44,6 +44,13 @@ jobs:
       with:
         access_token: ${{ github.token }}
     - uses: actions/checkout@v2
+    - name: Verify Mysql connection
+        env:
+          PORT: 3306
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P 3306 --silent; do
+            sleep 1
+          done 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
