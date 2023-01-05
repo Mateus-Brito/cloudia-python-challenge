@@ -1,3 +1,3 @@
-web: gunicorn cloudia_challenge.wsgi --log-file -
+web: gunicorn autoapp:app --log-file -
 
 release: flask db upgrade
