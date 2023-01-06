@@ -54,6 +54,7 @@ jobs:
         pip install -r requirements/dev.txt
     - name: Run Tests
       env:
+        TESTING: True
         SECRET_KEY: ${{ env.FLASK_SECRET_KEY }}
         TEST_DATABASE_URL: mysql://mysql:mysql@127.0.0.1:3306/cloudia_challenge_test
       run: |
