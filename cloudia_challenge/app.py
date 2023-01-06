@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 import sentry_sdk
+import sys
 import telegram
 from flask import Flask, jsonify
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -27,9 +28,20 @@ def create_app(config_object="cloudia_challenge.settings"):
     return app
 
 
+def get_is_running_server():
+    command_line = " ".join(sys.argv)
+    is_running_server = (
+        ("flask run" in command_line)
+        or ("gunicorn" in command_line)
+        or ("autoapp" in command_line)
+    )
+    return is_running_server
+
+
 def configure_bot(app):
     """Register Telegram Bot instance."""
-    if app.config["TESTING"]:
+    is_running_server = get_is_running_server()
+    if app.config["TESTING"] or not is_running_server:
         from unittest.mock import Mock
 
         bot = Mock()

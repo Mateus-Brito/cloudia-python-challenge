@@ -13,7 +13,12 @@ def create_send_message_mock():
         message_id += 2
         chat_id = kwargs.get("chat_id")
         text = kwargs.get("text")
-        bot_user = {"id": 10000, "username": "thebot", "first_name": "bot", "is_bot": True}
+        bot_user = {
+            "id": 10000,
+            "username": "thebot",
+            "first_name": "bot",
+            "is_bot": True,
+        }
         message = Message(
             message_id=message_id,
             from_user=User(**bot_user),
