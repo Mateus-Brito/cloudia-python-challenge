@@ -1,6 +1,6 @@
 # Cloudia  challenge Solution.
 
-Read more about the challenge here: [Cloudia Ppython](https://github.com/cloudiabot/cloudia_python)
+Read more about the challenge here: [Cloudia Python](https://github.com/cloudiabot/cloudia_python)
 
 ### Running the production environment
 
