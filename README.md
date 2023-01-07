@@ -24,7 +24,7 @@ docker-compose run --rm web flask db upgrade
 docker-compose run --rm web flask test
 ```
 
-### Configute telegram webhook
+### Configure telegram webhook
 
 ```
 https://api.telegram.org/bot<bot_token>/setWebhook?url=<your_domain>/api/telegram/update/
